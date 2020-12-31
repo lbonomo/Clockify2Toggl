@@ -1,0 +1,8 @@
+{
+   "esversion": 8,
+   "node": true,
+   "asi": true,
+   "maxerr": 50,
+   "indent": 3,
+   "latedef" : true
+}
