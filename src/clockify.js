@@ -9,55 +9,17 @@ const workspaceId = process.env.workspaceId
 
 // https://clockify.me/developers-api
 
-// List user data
-// console.log(`curl -H "content-type: application/json" -H "X-Api-Key: ${api_key}" -X GET ${api_host}/user | jq --color-output`)
-
-// List Workspaces ID
-// console.log(`curl -H "content-type: application/json" -H "X-Api-Key: ${api_key}" -X GET ${api_host}/api/v1/workspaces | jq --color-output '.[] | "\\(.name): \\(.id)"'`)
-
-
-let filter = {
-   "dateRangeStart": "2020-12-01T00:00:00.000",
-   "dateRangeEnd": "2020-12-31T23:59:59.000",
-   "summaryFilter": {
-      "groups": [
-         "USER",
-         "PROJECT",
-         "TIMEENTRY"
-      ]
-   },
-   "amountShown": "HIDE_AMOUNT"
-}
-
-// Necesario para workspace de terceros "amountShown": "HIDE_AMOUNT" 
-// console.log(`curl -H "content-type: application/json" -H "X-Api-Key: ${api_key}" -X POST -d '${JSON.stringify(filter)}' ${api_reports_host}/v1/workspaces/${workspaceId}/reports/summary | jq --color-output`)
-
-
-
-
-// console.log(`curl -H "content-type: application/json" -H "X-Api-Key: ${api_key}" -X POST -d '${JSON.stringify(filter)}' ${api_reports_host}/v1/workspaces/${workspaceId}/reports/detailed | jq --color-output`)
-
-const toHHMMSS = (time) => {
-
-   var sec_num = parseInt(time, 10); // don't forget the second param
-   var hours   = Math.floor(sec_num / 3600);
-   var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-   var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
+const toHHMMSS = (integer) => {
+   // don't forget the second param
+   let sec_num = parseInt(integer, 10)
+   let hours   = Math.floor(sec_num / 3600)
+   let minutes = Math.floor((sec_num - (hours * 3600)) / 60)
+   let seconds = sec_num - (hours * 3600) - (minutes * 60)
+   
    if (hours   < 10) {hours   = "0"+hours;}
    if (minutes < 10) {minutes = "0"+minutes;}
    if (seconds < 10) {seconds = "0"+seconds;}
-   return hours+':'+minutes+':'+seconds;
-}
-
-
-const toDDMMYYYY = (date) => {
-   // Return date in format dd/mm/yyyy
-   
-   const day = date.getDate()
-   const month = date.getMonth() + 1
-   const year = date.getFullYear()
-   return `${day}/${month}/${year}`;
+   return `${hours}:${minutes}:${seconds}`;
 }
 
 // Return de start and end of last month
@@ -95,13 +57,13 @@ const renderData = (data) => {
    const dateRangeStart = dateFormat(new Date(config.dateRangeStart), 'shortDate')
    const dateRangeEnd = dateFormat(new Date(config.dateRangeEnd), 'shortDate')
    const entries = data.data.timeentries
-
+   const hdecimal = (totals.totalTime/3600).toFixed(2)
    // Sumary
    console.log('## Summary')
    // console.log(`Date range start: ${toDDMMYYYY(dateRangeStart)}`)
    console.log(`Date range start: ${dateRangeStart}`)
    console.log(`Date range end:   ${dateRangeEnd}`)
-   console.log(`Total time:       ${toHHMMSS(totals.totalTime)}`)
+   console.log(`Total time:       ${toHHMMSS(totals.totalTime)} (${hdecimal})`)
    console.log(`Total entries:    ${totals.entriesCount}`)
    console.log('\n## Entries')
 
