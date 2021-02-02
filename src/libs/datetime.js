@@ -1,4 +1,4 @@
-export const toHHMMSS = (integer) => {
+const toHHMMSS = (integer) => {
   // don't forget the second param
   const secNum = parseInt(integer, 10)
   let hours = Math.floor(secNum / 3600)
@@ -12,7 +12,7 @@ export const toHHMMSS = (integer) => {
 }
 
 // Return de start and end of last month
-export const getDateRange = (target) => {
+const getDateRange = (target) => {
   const now = new Date()
   const startThisMonth = new Date(`${now.getFullYear()}-${now.getMonth() + 1}-01 23:59:59 GMT`)
   // const endLastMonth = new Date( startThisMonth.getFullYear(), startThisMonth.getMonth()+1, startThisMonth.getDate()-1)
@@ -48,3 +48,5 @@ export const getDateRange = (target) => {
       process.exit(1)
   }
 }
+
+module.exports = { toHHMMSS, getDateRange }

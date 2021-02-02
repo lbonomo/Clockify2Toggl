@@ -1,7 +1,7 @@
-import { getDateRange } from '../libs/datetime'
+const { getDateRange } = require('../libs/datetime')
 require('dotenv').config()
 
-export default class Clockify {
+class Clockify {
   // https://clockify.me/developers-api
   constructor () {
     this.axios = require('axios')
@@ -40,3 +40,5 @@ export default class Clockify {
     return result
   }
 }
+
+module.exports = Clockify

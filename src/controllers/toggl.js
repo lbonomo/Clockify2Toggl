@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-export default class Toggl {
+class Toggl {
   constructor () {
     this.axios = require('axios')
     this.api_host = process.env.toggl_api_host
@@ -184,3 +184,5 @@ export default class Toggl {
     return result
   }
 }
+
+module.exports = Toggl

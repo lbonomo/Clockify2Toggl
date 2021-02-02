@@ -5,10 +5,10 @@
  *
  */
 
-import Toggl from './controllers/toggl'
-import Clockify from './controllers/clockify'
 const fs = require('fs')
 const { Command } = require('commander')
+const Toggl = require('./controllers/toggl')
+const Clockify = require('./controllers/clockify')
 
 const args = new Command()
 args
@@ -53,7 +53,7 @@ const loop = async (entries, oldEntries) => {
 const main = async () => {
   const clockify = new Clockify()
 
-  const result = await clockify.getTasks('ThisMonth')
+  const result = await clockify.getTasks('LastMonth')
 
   if (result.status === 200) {
     const entries = result.data.timeentries
