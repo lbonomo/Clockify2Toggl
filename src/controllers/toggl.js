@@ -1,12 +1,13 @@
-require('dotenv').config()
-
+/**
+ * Toggl Class
+ */
 class Toggl {
-  constructor () {
+  constructor (config) {
     this.axios = require('axios')
-    this.api_host = process.env.toggl_api_host
-    this.api_username = process.env.toggl_api_username
-    this.api_password = process.env.toggl_api_password
-    this.toggl_workspace_id = process.env.toggl_workspace_id
+    this.api_host = config.api_host
+    this.api_username = config.api_username
+    this.api_password = config.api_password
+    this.toggl_workspace_id = config.workspace_id
   }
 
   // Extraigo el ID a partir de un name.

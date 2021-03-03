@@ -1,5 +1,8 @@
+src/toggl.conf
 .env
-*~
-package-lock.json
+build/
 node_modules/
+package-lock.json
 timeentries.txt
+build.tar.gz
+src/conf.json

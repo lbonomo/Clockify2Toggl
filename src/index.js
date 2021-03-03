@@ -10,12 +10,43 @@ const { Command } = require('commander')
 const Toggl = require('./controllers/toggl')
 const Clockify = require('./controllers/clockify')
 
-const args = new Command()
-args
-  .option('-c, --config <config-file>', 'Path to the config file', 'config.json')
+/**
+ * Read arguments
+ */
+const program = new Command() 
+program.requiredOption('-c, --config <config-file>', 'Path to the config file')
+program.parse(process.argv)
+const options = program.opts();
 
-const loop = async (entries, oldEntries) => {
-  const toggl = new Toggl()
+/**
+ * This fuction read device config file.
+ * @param {string} file Config file.
+ * @return {object} Json with status and data (all products or error message).
+ */
+const LoadConfig = (file) => {
+  var rawdata = ''
+  if (fs.existsSync(file)) {
+    rawdata = fs.readFileSync(file)
+    return {
+      status: 'successful',
+      data: JSON.parse(rawdata)
+    }
+  } else {
+    return {
+      status: 'failure',
+      data: { message: 'Can not read the config file' }
+    }
+  }
+}
+
+/**
+ * Main loop
+ * @param {array} entries Config file.
+ * @param {arrayg} oldEntries Config file.
+ * @return {object} Json with status and data (all products or error message).
+ */
+const loop = async (config, entries, oldEntries) => {
+  const toggl = new Toggl(config.toggl)
 
   for (const entrie of entries) {
     const clockifyID = entrie._id
@@ -30,7 +61,7 @@ const loop = async (entries, oldEntries) => {
       const data = {
         time_entry: {
           description: entrie.description,
-          tags: ['facturable'],
+          tags: config.toggl.tags,
           start: entrie.timeInterval.start,
           duration: entrie.timeInterval.duration,
           pid: projectID,
@@ -51,25 +82,35 @@ const loop = async (entries, oldEntries) => {
 }
 
 const main = async () => {
-  const clockify = new Clockify()
+  // Load config file 
+  const cfg = await LoadConfig(options.config)
 
-  const result = await clockify.getTasks('LastMonth')
+  if (cfg.status === 'successful') {
 
-  if (result.status === 200) {
-    const entries = result.data.timeentries
-    const timeFile = 'timeentries.txt'
-    try {
-      if (fs.existsSync(timeFile)) {
-        const lines = fs.readFileSync(timeFile, 'utf-8').split('\n')
-        const oldEntries = lines.map(line => line.split(':')[1])
-        loop(entries, oldEntries)
-      } else {
-        const oldEntries = []
-        loop(entries, oldEntries)
+    const config = cfg.data
+
+    const clockify = new Clockify(config.clockfy)
+
+    const result = await clockify.getTasks(config.period)
+
+    if (result.status === 200) {
+      const entries = result.data.timeentries
+      const timeFile = 'timeentries.txt'
+      try {
+        if (fs.existsSync(timeFile)) {
+          const lines = fs.readFileSync(timeFile, 'utf-8').split('\n')
+          const oldEntries = lines.map(line => line.split(':')[1])
+          loop(config, entries, oldEntries)
+        } else {
+          const oldEntries = []
+          loop(config, entries, oldEntries)
+        }
+      } catch (err) {
+        console.error(err)
       }
-    } catch (err) {
-      console.error(err)
     }
+  } else {
+    console.log("Can't read config file")
   }
 }
 

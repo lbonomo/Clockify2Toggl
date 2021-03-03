@@ -3,14 +3,18 @@ require('dotenv').config()
 
 class Clockify {
   // https://clockify.me/developers-api
-  constructor () {
+  constructor (config) {
     this.axios = require('axios')
-    this.apiHost = process.env.clockify_api_host
-    this.apiReportsHost = process.env.clockify_api_reports_host
-    this.apiKey = process.env.clockify_api_key
-    this.workspaceId = process.env.clockify_workspaceId
+    this.apiHost = config.api_host
+    this.apiReportsHost = config.api_reports_host
+    this.apiKey = config.api_key
+    this.workspaceId = config.workspaceId
   }
 
+/**
+ * Get the tasks in a range.
+ * @param {string} range Date range name.
+ */
   async getTasks (range) {
     const url = `https://${this.apiReportsHost}/v1/workspaces/${this.workspaceId}/reports/detailed`
 

@@ -1,0 +1,18 @@
+{
+    "clockfy": {
+        "api_host":"api.clockify.me",
+        "api_reports_host":"reports.api.clockify.me",
+        "api_key":"",
+        "workspaceId":""
+    },
+    "toggl" : {
+        "api_host":"api.track.toggl.com",
+        "api_reports_host":"reports.api.clockify.me",
+        "api_token":"",
+        "api_username":"",
+        "api_password":"",
+        "workspace_id":"",
+        "tags": ["clockify"]
+    },
+    "period": "LastMonth"
+} 
