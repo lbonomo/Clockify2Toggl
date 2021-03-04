@@ -1,5 +1,4 @@
 const { getDateRange } = require('../libs/datetime')
-require('dotenv').config()
 
 class Clockify {
   // https://clockify.me/developers-api
